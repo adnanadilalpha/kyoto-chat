@@ -27,7 +27,10 @@ export function StayCard({ details }: { details: StayDetails }) {
         <p className="pt-1 text-sm text-ink">
           <span className="font-extrabold">${details.nightlyPriceUsd}</span>
           <span className="text-muted"> night</span>
-          <span className="text-muted"> · ${details.totalUsd} total</span>
+          <span className="text-muted">
+            {" "}
+            · ${details.totalUsd} total incl. fees
+          </span>
         </p>
       </div>
     </article>
