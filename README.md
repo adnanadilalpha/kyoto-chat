@@ -20,6 +20,8 @@ Rules from *Moderated Session Prototype Requirements: Trip-Planner Chat*, verifi
 | Zero blank-chat moments (failure, Try again press, and after) | ✓ | ✓ |
 | Try again brings the three cards back | ✓ | ✓ |
 
+Sample data note: the header line **Suggestions only · no bookings** is in the [phone cards](docs/screenshot-phone-cards.png) and [laptop cards](docs/screenshot-laptop-cards.png) shots below.
+
 ### Evidence screenshots
 
 | Setup | Cards | Error bubble | Cards after retry |
