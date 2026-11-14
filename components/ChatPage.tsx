@@ -5,7 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { ErrorBubble } from "./ErrorBubble";
 import { SuggestionCards } from "./SuggestionCards";
 import { ThinkingDots } from "./ThinkingDots";
-import { ERROR_MESSAGE, MOCK_CARDS } from "@/lib/mock-reply";
+import { ERROR_LEAD, ERROR_SUPPORT } from "@/lib/mock-reply";
+import {
+  BROKEN_MOCK_RESPONSE,
+  HEALTHY_MOCK_RESPONSE,
+  parseAssistantReply,
+} from "@/lib/parse-reply";
 import type { ChatMessage } from "@/lib/types";
 
 const THINKING_MS = 1400;
@@ -55,31 +60,35 @@ export function ChatPage() {
     ]);
 
     window.setTimeout(() => {
-      const shouldFail = failOnce && !failUsedRef.current;
-      if (shouldFail) failUsedRef.current = true;
+      const useBroken = failOnce && !failUsedRef.current;
+      if (useBroken) failUsedRef.current = true;
+
+      const payload = useBroken ? BROKEN_MOCK_RESPONSE : HEALTHY_MOCK_RESPONSE;
 
       setMessages((prev) => {
         const withoutThinking = prev.filter((m) => m.id !== thinkingId);
-        if (shouldFail) {
+        try {
+          const cards = parseAssistantReply(payload);
+          return [
+            ...withoutThinking,
+            {
+              id: uid(),
+              role: "assistant",
+              kind: "cards",
+              cards,
+            },
+          ];
+        } catch {
           return [
             ...withoutThinking,
             {
               id: uid(),
               role: "assistant",
               kind: "error",
-              text: ERROR_MESSAGE,
+              text: `${ERROR_LEAD} ${ERROR_SUPPORT}`,
             },
           ];
         }
-        return [
-          ...withoutThinking,
-          {
-            id: uid(),
-            role: "assistant",
-            kind: "cards",
-            cards: MOCK_CARDS,
-          },
-        ];
       });
       setLocked(false);
     }, THINKING_MS);
@@ -153,7 +162,7 @@ export function ChatPage() {
                   key={message.id}
                   className={`flex ${showingCards ? "justify-end lg:max-w-sm" : "justify-end"}`}
                 >
-                  <div className="max-w-[85%] rounded-[20px] rounded-br-md bg-ink px-4 py-3 text-[15px] leading-5 text-white sm:max-w-md">
+                  <div className="max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-3 text-[15px] leading-5 text-white sm:max-w-md">
                     {message.text}
                   </div>
                 </div>
@@ -179,15 +188,16 @@ export function ChatPage() {
                 <div className="mt-1 shrink-0">
                   <AirbnbMark />
                 </div>
-                <div className="flex min-w-0 max-w-md flex-col gap-1.5">
+                <div className="flex min-w-0 max-w-[80%] flex-col gap-1.5 self-start sm:max-w-md">
                   <span className="text-[12px] font-semibold text-muted">
                     Assistant
                   </span>
-                  <div className="rounded-[20px] rounded-bl-md border border-line-soft bg-white px-4 py-3 shadow-sm">
+                  <div className="rounded-2xl rounded-bl-md border border-gray-200 bg-gray-50 px-4 py-3">
                     {message.kind === "thinking" && <ThinkingDots />}
                     {message.kind === "error" && (
                       <ErrorBubble
-                        message={message.text}
+                        lead={ERROR_LEAD}
+                        support={ERROR_SUPPORT}
                         onRetry={handleRetry}
                       />
                     )}

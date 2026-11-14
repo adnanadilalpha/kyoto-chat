@@ -59,8 +59,10 @@ export const MOCK_CARDS: SuggestionCard[] = [
   },
 ];
 
-export const ERROR_MESSAGE =
-  "Sorry, I couldn't put your Kyoto weekend together just now. Let's give it another go.";
+/** Guest-facing copy — Design Systems error bubble guidelines. */
+export const ERROR_LEAD = "We couldn't put your Kyoto plan together.";
+export const ERROR_SUPPORT = "Let's give it another go.";
+export const ERROR_MESSAGE = `${ERROR_LEAD} ${ERROR_SUPPORT}`;
 
 function parseStayDate(iso: string) {
   return new Date(`${iso}T12:00:00`);

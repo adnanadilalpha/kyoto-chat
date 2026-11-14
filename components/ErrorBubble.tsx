@@ -1,23 +1,27 @@
 type Props = {
-  message: string;
+  lead: string;
+  support: string;
   onRetry: () => void;
 };
 
-export function ErrorBubble({ message, onRetry }: Props) {
+/**
+ * In-chat failure bubble — Airbnb Design Systems assistant error guidelines.
+ * Same shape as a normal assistant reply; neutral colours only; no red; no codes.
+ */
+export function ErrorBubble({ lead, support, onRetry }: Props) {
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[15px] leading-6 whitespace-pre-wrap text-ink">
-        {message}
-      </p>
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={onRetry}
-          className="rounded-lg bg-rausch px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rausch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rausch"
-        >
-          Try again
-        </button>
+    <div className="flex flex-col">
+      <div aria-live="polite">
+        <p className="text-[15px] leading-6 text-gray-800">{lead}</p>
+        <p className="mt-1 text-[15px] leading-6 text-gray-800">{support}</p>
       </div>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="mt-3 min-h-11 self-start rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
+      >
+        Try again
+      </button>
     </div>
   );
 }
