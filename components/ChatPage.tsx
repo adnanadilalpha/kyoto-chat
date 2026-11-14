@@ -98,6 +98,10 @@ export function ChatPage() {
     const trimmed = text.trim();
     if (!trimmed || locked) return;
 
+    // Re-arm ?fail=once on each new typed request so guests don't need a reload.
+    // Try again calls runAssistant directly and keeps the flag spent.
+    failUsedRef.current = false;
+
     setLastRequest(trimmed);
     setDraft("");
     setMessages((prev) => [
