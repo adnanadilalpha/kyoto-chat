@@ -12,13 +12,13 @@ Rules from *Moderated Session Prototype Requirements: Trip-Planner Chat*, verifi
 
 | Rule | Phone | Laptop |
 |---|---|---|
-| Opens with no install, login, or configuration | [x] | [x] |
-| Visible wording that trips are sample data and nothing is booked | [x] | [x] |
-| One trip request shows thinking, then 3 of 3 cards (stay, Experience, food) with clearly different layouts | [x] | [x] |
-| At phone width, nothing cut off and no sideways scroll | [x] | — |
-| Forced failure shows a friendly message and Try again in the assistant bubble | [x] | [x] |
-| Zero blank-chat moments (failure, Try again press, and after) | [x] | [x] |
-| Try again brings the three cards back | [x] | [x] |
+| Opens with no install, login, or configuration | ✓ | ✓ |
+| Visible wording that trips are sample data and nothing is booked | ✓ | ✓ |
+| One trip request shows thinking, then 3 of 3 cards (stay, Experience, food) with clearly different layouts | ✓ | ✓ |
+| At phone width, nothing cut off and no sideways scroll | ✓ | — |
+| Forced failure shows a friendly message and Try again in the assistant bubble | ✓ | ✓ |
+| Zero blank-chat moments (failure, Try again press, and after) | ✓ | ✓ |
+| Try again brings the three cards back | ✓ | ✓ |
 
 ### Evidence screenshots
 
