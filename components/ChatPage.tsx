@@ -14,6 +14,17 @@ function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function AirbnbMark() {
+  return (
+    <span
+      className="flex size-8 items-center justify-center rounded-full bg-rausch text-[15px] font-extrabold tracking-tight text-white"
+      aria-hidden
+    >
+      a
+    </span>
+  );
+}
+
 export function ChatPage() {
   const searchParams = useSearchParams();
   const failOnce = searchParams.get("fail") === "once";
@@ -24,6 +35,9 @@ export function ChatPage() {
   const [lastRequest, setLastRequest] = useState("");
   const failUsedRef = useRef(false);
   const threadRef = useRef<HTMLDivElement>(null);
+  const showingCards = messages.some(
+    (m) => m.role === "assistant" && m.kind === "cards",
+  );
 
   useEffect(() => {
     threadRef.current?.scrollTo({
@@ -32,7 +46,7 @@ export function ChatPage() {
     });
   }, [messages]);
 
-  function runAssistant(requestText: string) {
+  function runAssistant(_requestText: string) {
     const thinkingId = uid();
     setLocked(true);
     setMessages((prev) => [
@@ -95,65 +109,101 @@ export function ChatPage() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-paper text-ink">
-      <header className="shrink-0 border-b border-stone-200 bg-white/90 px-4 py-3 backdrop-blur-sm">
-        <div className="mx-auto flex w-full max-w-2xl items-baseline justify-between gap-3">
-          <h1 className="font-display text-lg tracking-tight">Kyoto Trip Planner</h1>
-          <p className="text-xs text-slate">Suggestions only · no bookings</p>
+    <div className="flex h-dvh flex-col bg-surface text-ink">
+      <header className="shrink-0 border-b border-line-soft bg-white px-4 py-3">
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2.5">
+          <AirbnbMark />
+          <div className="flex flex-col">
+            <h1 className="text-[16px] leading-5 font-extrabold tracking-tight">
+              Kyoto Trip Planner
+            </h1>
+            <p className="text-[12px] leading-4 text-muted">
+              Suggestions only · no bookings
+            </p>
+          </div>
         </div>
       </header>
 
       <div
         ref={threadRef}
-        className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 overflow-y-auto px-4 py-6"
+        className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-5 overflow-y-auto px-4 py-6"
         role="log"
         aria-live="polite"
         aria-relevant="additions"
       >
-        {messages.length === 0 && (
-          <p className="mx-auto max-w-sm pt-16 text-center text-sm leading-relaxed text-slate">
-            Ask for a Kyoto weekend and I&apos;ll suggest a stay, an experience,
-            and a place to eat.
-          </p>
-        )}
+        <div
+          className={`flex min-w-0 flex-1 flex-col gap-5 ${
+            showingCards ? "w-full" : "mx-auto w-full max-w-md"
+          }`}
+        >
+          {messages.length === 0 && (
+            <div className="mx-auto flex max-w-sm flex-col items-center gap-3 pt-20 text-center">
+              <AirbnbMark />
+              <p className="text-[15px] leading-6 text-muted">
+                Ask for a Kyoto weekend and I&apos;ll suggest a stay, an
+                experience, and a place to eat.
+              </p>
+            </div>
+          )}
 
-        {messages.map((message) => {
-          if (message.role === "user") {
+          {messages.map((message) => {
+            if (message.role === "user") {
+              return (
+                <div
+                  key={message.id}
+                  className={`flex ${showingCards ? "justify-end lg:max-w-sm" : "justify-end"}`}
+                >
+                  <div className="max-w-[85%] rounded-[20px] rounded-br-md bg-ink px-4 py-3 text-[15px] leading-5 text-white sm:max-w-md">
+                    {message.text}
+                  </div>
+                </div>
+              );
+            }
+
+            if (message.kind === "cards") {
+              return (
+                <div key={message.id} className="flex w-full flex-col gap-3">
+                  <div className="flex items-center gap-2">
+                    <AirbnbMark />
+                    <span className="text-[12px] font-semibold text-muted">
+                      Assistant
+                    </span>
+                  </div>
+                  <SuggestionCards cards={message.cards} />
+                </div>
+              );
+            }
+
             return (
-              <div key={message.id} className="flex justify-end">
-                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-2.5 text-sm leading-relaxed text-white">
-                  {message.text}
+              <div key={message.id} className="flex gap-2.5">
+                <div className="mt-1 shrink-0">
+                  <AirbnbMark />
+                </div>
+                <div className="flex min-w-0 max-w-md flex-col gap-1.5">
+                  <span className="text-[12px] font-semibold text-muted">
+                    Assistant
+                  </span>
+                  <div className="rounded-[20px] rounded-bl-md border border-line-soft bg-white px-4 py-3 shadow-sm">
+                    {message.kind === "thinking" && <ThinkingDots />}
+                    {message.kind === "error" && (
+                      <ErrorBubble
+                        message={message.text}
+                        onRetry={handleRetry}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             );
-          }
-
-          return (
-            <div key={message.id} className="flex justify-start">
-              <div className="flex max-w-[92%] flex-col gap-1">
-                <span className="text-xs font-medium tracking-wide text-slate uppercase">
-                  Assistant
-                </span>
-                <div className="rounded-2xl rounded-bl-md border border-stone-200 bg-white px-4 py-3 shadow-sm">
-                  {message.kind === "thinking" && <ThinkingDots />}
-                  {message.kind === "cards" && (
-                    <SuggestionCards cards={message.cards} />
-                  )}
-                  {message.kind === "error" && (
-                    <ErrorBubble message={message.text} onRetry={handleRetry} />
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+          })}
+        </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 border-t border-stone-200 bg-white px-4 py-3"
+        className="shrink-0 border-t border-line-soft bg-white px-4 py-3"
       >
-        <div className="mx-auto flex w-full max-w-2xl gap-2">
+        <div className="mx-auto flex w-full max-w-md items-center gap-2">
           <label className="sr-only" htmlFor="trip-request">
             Trip request
           </label>
@@ -164,12 +214,12 @@ export function ChatPage() {
             onChange={(e) => setDraft(e.target.value)}
             disabled={locked}
             placeholder="Plan a weekend in Kyoto for two"
-            className="min-w-0 flex-1 rounded-xl border border-stone-300 bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-slate/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:cursor-not-allowed disabled:opacity-60"
+            className="min-w-0 flex-1 rounded-full border border-line bg-white px-4 py-3 text-[15px] text-ink shadow-sm placeholder:text-muted focus-visible:border-ink focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-70"
           />
           <button
             type="submit"
             disabled={locked || !draft.trim()}
-            className="shrink-0 rounded-xl bg-ink px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ink/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-full bg-rausch px-5 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-rausch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rausch disabled:cursor-not-allowed disabled:bg-line disabled:text-muted"
           >
             Send
           </button>

@@ -1,30 +1,25 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-const display = Fraunces({
-  variable: "--font-fraunces",
+const cereal = Nunito_Sans({
+  variable: "--font-cereal",
   subsets: ["latin"],
-});
-
-const sans = Source_Sans_3({
-  variable: "--font-source",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Kyoto Trip Planner",
+  title: "Kyoto Trip Planner · Airbnb",
   description:
     "Suggest a stay, experience, and meal for a two-night weekend in Kyoto.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${display.variable} ${sans.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+    <html lang="en" className={`${cereal.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col font-sans text-ink">
+        {children}
+      </body>
     </html>
   );
 }

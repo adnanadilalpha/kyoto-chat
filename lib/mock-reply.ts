@@ -1,3 +1,8 @@
+import {
+  PRIMARY_EXPERIENCE,
+  PRIMARY_FOOD,
+  PRIMARY_STAY,
+} from "./content-pack";
 import type { SuggestionCard } from "./types";
 
 const FILLER = "Details coming soon";
@@ -16,26 +21,27 @@ export const MOCK_CARDS: SuggestionCard[] = [
   {
     cardType: "stay",
     details: {
-      destination: fill("Gion, Kyoto"),
-      listingTitle: fill("Restored machiya townhouse near Gion"),
+      destination: fill(`${PRIMARY_STAY.neighbourhood}, Kyoto`),
+      listingTitle: fill(PRIMARY_STAY.listingTitle),
       checkIn: "2025-04-11",
       checkOut: "2025-04-13",
-      nightlyPriceUsd: 168,
-      description: fill("Private garden and cedar soaking tub"),
+      nightlyPriceUsd: PRIMARY_STAY.pricePerNightUsd,
+      description: fill(PRIMARY_STAY.highlight),
     },
   },
   {
     cardType: "experience",
     details: {
-      activityName: fill("Tea ceremony in a 100-year-old machiya"),
-      duration: fill("2 hours"),
+      activityName: fill(PRIMARY_EXPERIENCE.title),
+      duration: fill(`${PRIMARY_EXPERIENCE.durationHours} hours`),
       dayPlan: [
         {
           day: "Sat 12 Apr",
-          plan: fill("Outside Gion-Shijo Station, exit 6 · Culture with Mei"),
+          plan: fill(
+            `${PRIMARY_EXPERIENCE.meetingPoint} · ${PRIMARY_EXPERIENCE.category} with ${PRIMARY_EXPERIENCE.hostFirstName}`,
+          ),
         },
         {
-          // Workbook has no Sun row for this experience
           day: "Sun 13 Apr",
           plan: FILLER,
         },
@@ -45,10 +51,10 @@ export const MOCK_CARDS: SuggestionCard[] = [
   {
     cardType: "food",
     details: {
-      restaurantName: fill("Menya Inoichi"),
-      mealType: fill("Dinner"),
-      priceRange: fill("$"),
-      description: fill("No reservations - arrive before 18:00"),
+      restaurantName: fill(PRIMARY_FOOD.placeName),
+      mealType: fill(PRIMARY_FOOD.meal),
+      priceRange: fill(PRIMARY_FOOD.priceLevel),
+      description: fill(PRIMARY_FOOD.bookingNote),
     },
   },
 ];
@@ -56,13 +62,37 @@ export const MOCK_CARDS: SuggestionCard[] = [
 export const ERROR_MESSAGE =
   "Sorry, I couldn't put your Kyoto weekend together just now. Let's give it another go.";
 
-export function formatStayDates(checkIn: string, checkOut: string): string {
-  const inDate = new Date(`${checkIn}T12:00:00`);
-  const outDate = new Date(`${checkOut}T12:00:00`);
-  const nights = Math.round(
+function parseStayDate(iso: string) {
+  return new Date(`${iso}T12:00:00`);
+}
+
+export function stayNightCount(checkIn: string, checkOut: string): number {
+  const inDate = parseStayDate(checkIn);
+  const outDate = parseStayDate(checkOut);
+  return Math.round(
     (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24),
   );
+}
+
+export function formatStayHeadline(checkIn: string, checkOut: string): string {
+  const nights = stayNightCount(checkIn, checkOut);
   const fmt = (d: Date) =>
-    d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-  return `${fmt(inDate)} – ${fmt(outDate)} · ${nights} night${nights === 1 ? "" : "s"}`;
+    d.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
+  return `${fmt(parseStayDate(checkIn))} – ${fmt(parseStayDate(checkOut))} · ${nights} night${nights === 1 ? "" : "s"}`;
+}
+
+export function formatStayDay(iso: string): { weekday: string; date: string } {
+  const d = parseStayDate(iso);
+  return {
+    weekday: d.toLocaleDateString("en-GB", { weekday: "short" }),
+    date: d.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+  };
 }

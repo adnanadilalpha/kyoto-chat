@@ -6,12 +6,14 @@ type Props = {
 export function ErrorBubble({ message, onRetry }: Props) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm leading-relaxed text-ink whitespace-pre-wrap">{message}</p>
+      <p className="text-[15px] leading-6 whitespace-pre-wrap text-ink">
+        {message}
+      </p>
       <div className="flex justify-end">
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-lg bg-ink px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-ink/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          className="rounded-lg bg-rausch px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rausch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rausch"
         >
           Try again
         </button>
