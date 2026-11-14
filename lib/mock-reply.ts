@@ -42,10 +42,6 @@ export const MOCK_CARDS: SuggestionCard[] = [
             `${PRIMARY_EXPERIENCE.meetingPoint} · ${PRIMARY_EXPERIENCE.category} with ${PRIMARY_EXPERIENCE.hostFirstName}`,
           ),
         },
-        {
-          day: "Sun 13 Apr",
-          plan: FILLER,
-        },
       ],
     },
   },
