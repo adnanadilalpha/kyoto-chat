@@ -9,6 +9,7 @@ export type StayDetails = {
   checkIn: string;
   checkOut: string;
   nightlyPriceUsd: number;
+  totalUsd: number;
   description: string;
 };
 

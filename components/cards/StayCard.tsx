@@ -1,11 +1,9 @@
 import { CardPhoto } from "@/components/PhotoPlaceholder";
 import { PRIMARY_STAY } from "@/lib/content-pack";
-import { formatStayHeadline, stayNightCount } from "@/lib/mock-reply";
+import { formatStayHeadline } from "@/lib/mock-reply";
 import type { StayDetails } from "@/lib/types";
 
 export function StayCard({ details }: { details: StayDetails }) {
-  const nights = stayNightCount(details.checkIn, details.checkOut);
-
   return (
     <article className="overflow-hidden rounded-2xl bg-white shadow-(--shadow-card) ring-1 ring-black/5">
       <div className="h-1 w-full bg-coral" aria-hidden />
@@ -29,10 +27,7 @@ export function StayCard({ details }: { details: StayDetails }) {
         <p className="pt-1 text-sm text-ink">
           <span className="font-extrabold">${details.nightlyPriceUsd}</span>
           <span className="text-muted"> night</span>
-          <span className="text-muted">
-            {" "}
-            · ${details.nightlyPriceUsd * nights} total
-          </span>
+          <span className="text-muted"> · ${details.totalUsd} total</span>
         </p>
       </div>
     </article>

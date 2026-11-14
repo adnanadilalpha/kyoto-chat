@@ -29,11 +29,11 @@ Rules from *Moderated Session Prototype Requirements: Trip-Planner Chat*, verifi
 
 ## Team message (#search-trip-planner)
 
-Kyoto Trip Planner is ready for the dry run (Thu 13 Mar) and guest sessions (1 Apr). Live: https://kyoto-chat.vercel.app — no login. Happy path: type “Plan a weekend in Kyoto for two”. Forced failure: open https://kyoto-chat.vercel.app/?fail=once, send the same request, tap Try again (no code edits). Suggestions only — sample data, nothing booked. cc Hannah Brooks, Tomás Herrera, Priya Raman, Daniel Okafor.
+Kyoto Trip Planner is ready for the dry run (Thu 13 Mar) and guest sessions (1 Apr). Live: https://kyoto-chat.vercel.app — no login. Happy path: type “Plan a weekend in Kyoto for two”. Forced failure: open https://kyoto-chat.vercel.app/?fail=once, send the same request, tap Try again (no code edits). Reload that ?fail=once link before each guest so the failure fires again. Suggestions only — sample data, nothing booked. cc Hannah Brooks, Tomás Herrera, Priya Raman, Daniel Okafor.
 
 ## Forced failure
 
-Open [`/?fail=once`](https://kyoto-chat.vercel.app/?fail=once), send a trip request, then tap **Try again** to see the three cards.
+Open [`/?fail=once`](https://kyoto-chat.vercel.app/?fail=once), send a trip request, then tap **Try again** to see the three cards. Reload the `?fail=once` link before each run so the failure fires again.
 
 ## What’s included
 

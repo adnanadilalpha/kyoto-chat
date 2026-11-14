@@ -31,6 +31,7 @@ function isStayDetails(details: unknown): details is StayDetails {
     typeof d.checkIn === "string" &&
     typeof d.checkOut === "string" &&
     typeof d.nightlyPriceUsd === "number" &&
+    typeof d.totalUsd === "number" &&
     typeof d.description === "string"
   );
 }

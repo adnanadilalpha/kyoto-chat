@@ -26,6 +26,7 @@ export const MOCK_CARDS: SuggestionCard[] = [
       checkIn: "2025-04-11",
       checkOut: "2025-04-13",
       nightlyPriceUsd: PRIMARY_STAY.pricePerNightUsd,
+      totalUsd: PRIMARY_STAY.totalUsd,
       description: fill(PRIMARY_STAY.highlight),
     },
   },
